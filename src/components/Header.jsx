@@ -51,6 +51,12 @@ const Header = () => {
           </Link>
         </nav>
         <Link
+          to='/login'
+          className='inline-flex items-center text-white bg-transparent border-0 py-2 px-4 focus:outline-none hover:bg-yellow-500 hover:text-white rounded text-base mt-4 md:mt-0 mr-4'
+        >
+          Login
+        </Link>
+        <Link
           to={"/ShoppingCard"}
           className="inline-flex items-center text-white bg-yellow-500 border-0 py-2 px-4 focus:outline-none hover:bg-yellow-700 rounded text-base mt-4 md:mt-0"
         >
