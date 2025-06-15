@@ -14,7 +14,7 @@ RUN npm install -g serve
 # Copy the build folder from the builder stage
 COPY --from=builder /app/build ./build
 # Set the port environment variable
-ENV PORT=8050
+ENV PORT=8090
 # Expose the port
 EXPOSE $PORT
 # Run serve to serve the build folder
