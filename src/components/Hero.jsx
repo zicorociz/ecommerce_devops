@@ -29,7 +29,7 @@ const Hero = () => {
             <img
               className="object-cover object-center rounded"
               alt="hero"
-              src="https://stock.adobe.com/id/search?k=shopping&asset_id=241431868"
+              src="../image/about.avif"
             />
           </div>
         </div>
