@@ -11,6 +11,9 @@ import Context from './modules/Context';
 import ErrorPage from './modules/ErrorPage';
 import Products from './modules/Products';
 import CategoryPage from './modules/CategoryPage';
+import Login from './modules/Login'; // Pastikan path ini sesuai dengan lokasi file Anda
+import SignUp from './modules/SignUp';
+
 
 function App() {
   return (
@@ -26,6 +29,9 @@ function App() {
             <Route path='/Products/category/:category' element={<CategoryPage />} />
             <Route path='*' element={<ErrorPage title='Page not found' des='Sorry, we couldn&apos:t find the page you&apos;re looking for.' buttonOne='Take me Back' buttonTwo='Go Home' />} />
             <Route path='/ShoppingCard' element={<ShoppingCart />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/signup' element={<SignUp />} />
+            
         </Routes>
         <Footer />
     </>
