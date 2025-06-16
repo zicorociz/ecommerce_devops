@@ -25,7 +25,7 @@ const Home = () => {
     <>
       <Hero />
       <Cart />
-      <h2 className="text-6xl font-bold text-center mt-20">Prdoucts</h2>
+      <h2 className="text-6xl font-bold text-center mt-20">Products</h2>
       {
         products.length > 0 ? <Product product={products} /> : <Loader />
       }

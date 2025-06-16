@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; // ✅ Gunakan instance `auth` langsung
+import { auth } from "../firebase"; // Gunakan instance `auth` langsung
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +17,7 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       setErrorMessage("Incorrect email or password. Please try again.");
-      console.error("Login error:", error); // ✅ Tambahkan log untuk debugging
+      console.error("Login error:", error); // Tambahkan log untuk debugging
     }
   };
 
