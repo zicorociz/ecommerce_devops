@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-
-const auth = getAuth(); // Hindari pemanggilan berulang
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../firebase'; // sesuaikan path jika perlu
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [user, setUser] = useState(null);

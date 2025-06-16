@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase"; // Pastikan path-nya benar
-
-const auth = getAuth(app);
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase"; // ✅ Gunakan instance `auth` langsung
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -22,9 +20,11 @@ const SignUp = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      alert("Signup successful! Redirecting to login...");
       navigate("/login");
     } catch (error) {
       setErrorMessage(error.message);
+      console.error("Signup error:", error); // ✅ Tambahkan log untuk debugging
     }
   };
 

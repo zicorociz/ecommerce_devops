@@ -1,9 +1,6 @@
-// src/firebase.js
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-
-// Konfigurasi Firebase milikmu
 const firebaseConfig = {
   apiKey: "AIzaSyAy5tdVugIk4tAD_8m6FlSgXkQcNKheENw",
   authDomain: "pso-klp9.firebaseapp.com",
@@ -16,6 +13,6 @@ const firebaseConfig = {
 
 // Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app);
 
-export { app, analytics };
+export { app, auth };
