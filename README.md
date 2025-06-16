@@ -4,8 +4,8 @@ Repositori ini dibuat untuk mengimplementasikan praktik **Continuous Integration
 ![image_alt](https://github.com/zicorociz/cobadevops3/blob/b0dfc7a6d8dace330440f8e79e5b77ea70ceda42/website%20page.png)
 
 ## 📄 Dokumentasi Proyek
-Untuk dokumentasi lengkap terkait Project PSO, silakan lihat:
-👉 Lihat Dokumentasi PSO [disini](https://docs.google.com/document/d/1a2DzO4n6TFwfom2k698a_BO9H8oXvmMIc7KmMnWqqIs/edit?tab=t.0)
+👉 Dokumentasi lengkap proyek PSO dapat diakses [di sini](https://docs.google.com/document/d/1a2DzO4n6TFwfom2k698a_BO9H8oXvmMIc7KmMnWqqIs/edit?tab=t.0).
+
 
 ## 📌 Tujuan
 
