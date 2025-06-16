@@ -14,7 +14,8 @@ import CategoryPage from './modules/CategoryPage';
 import Login from './modules/Login'; // Pastikan path ini sesuai dengan lokasi file Anda
 import SignUp from './modules/SignUp';
 import PrivateRoute from './routes/PrivateRoute';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             
         </Routes>
         <Footer />
+        <ToastContainer position="top-center" />
     </>
   );
 }
