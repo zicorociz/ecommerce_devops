@@ -1,28 +1,30 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { app } from "../firebase"; // Pastikan path-nya benar
+
+const auth = getAuth(app);
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
-    // Simple validation
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match.');
+      setErrorMessage("Passwords do not match.");
       return;
     }
 
-    // Store the user credentials in localStorage (mock API)
-    if (email && password) {
-      localStorage.setItem('user', JSON.stringify({ email, password })); // Save to localStorage
-      navigate('/login'); // Redirect to login page
-    } else {
-      setErrorMessage('Please fill in all fields.');
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/login");
+    } catch (error) {
+      setErrorMessage(error.message);
     }
   };
 
@@ -73,7 +75,7 @@ const SignUp = () => {
           </button>
         </form>
         <p className="mt-4 text-center">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <a href="/login" className="text-yellow-500">Login</a>
         </p>
       </div>
@@ -82,4 +84,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-// This code defines a SignUp component that allows users to create an account.

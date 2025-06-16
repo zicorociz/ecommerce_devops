@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "../firebase"; // Pastikan path-nya benar
+
+const auth = getAuth(app);
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Get user data from localStoragea
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-
-    // Validate login
-    if (storedUser && storedUser.email === email && storedUser.password === password) {
-      navigate('/'); // Redirect to home page
-    } else {
-      setErrorMessage('Invalid credentials, please try again.');
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/");
+    } catch (error) {
+      setErrorMessage("Invalid credentials, please try again.");
     }
   };
 
@@ -57,7 +58,7 @@ const Login = () => {
           </button>
         </form>
         <p className="mt-4 text-center">
-          Don&apos;t have an account?{' '}
+          Don't have an account?{" "}
           <a href="/signup" className="text-yellow-500">Sign up</a>
         </p>
       </div>
@@ -66,5 +67,3 @@ const Login = () => {
 };
 
 export default Login;
-// This code defines a simple login component using Reacthgh.
-// It in  cludes a form for users to enter their email and password, validates the credentials against stored user data in localStorage, and provides feedback on successful or failed login attempts. The component uses React hooks for state management and the useNavigate hook from react-router-dom for navigation.
