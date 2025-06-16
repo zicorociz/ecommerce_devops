@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: CI/CD Pipeline
 
 on:
   push:
@@ -7,34 +7,46 @@ on:
       - staging
 
 jobs:
-  build-and-push:
+  # CI Job (Code Quality and Build)
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+      
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=zicorociz
+            -Dsonar.projectKey=zicorociz_ecommerce_devops
+            -Dsonar.python.coverage.reportPaths=coverage.xml
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
+      
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .          
+          context: .
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/ecommerce:${{ github.ref_name == 'main' && 'production' || 'staging' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ secrets.DOCKER_USERNAME }}/ecommerce:${{ github.ref_name == 'main' && 'production' || 'staging' }}
 
+  # CD Job (Deploy to Production)
   deploy-production:
-    needs: build-and-push
-    if: github.ref_name == 'main'
+    needs: ci
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Production
@@ -49,3 +61,22 @@ jobs:
             docker stop ecommerce || true
             docker rm ecommerce || true
             docker run -d --name ecommerce -p 8090:8090 ${{ secrets.DOCKER_USERNAME }}/ecommerce:production
+
+  # CD Job (Deploy to Staging)
+  deploy-staging:
+    needs: ci
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Staging
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USERNAME }}
+          password: ${{ secrets.STAGING_PASSWORD }}
+          port: 22
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/ecommerce:staging
+            docker stop ecommerce || true
+            docker rm ecommerce || true
+            docker run -d --name ecommerce -p 8090:8090 ${{ secrets.DOCKER_USERNAME }}/ecommerce:staging
