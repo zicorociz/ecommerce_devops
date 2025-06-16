@@ -13,6 +13,7 @@ import Products from './modules/Products';
 import CategoryPage from './modules/CategoryPage';
 import Login from './modules/Login'; // Pastikan path ini sesuai dengan lokasi file Anda
 import SignUp from './modules/SignUp';
+import PrivateRoute from './routes/PrivateRoute';
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
             <Route path='/Products' element={<Products/>} />
             <Route path='/Products/category/:category' element={<CategoryPage />} />
             <Route path='*' element={<ErrorPage title='Page not found' des='Sorry, we couldn&apos:t find the page you&apos;re looking for.' buttonOne='Take me Back' buttonTwo='Go Home' />} />
-            <Route path='/ShoppingCard' element={<ShoppingCart />} />
+            <Route path='/ShoppingCard' element={<PrivateRoute><ShoppingCart /></PrivateRoute>} />
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<SignUp />} />
             

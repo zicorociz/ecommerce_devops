@@ -18,7 +18,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/");
     } catch (error) {
-      setErrorMessage("Invalid credentials, please try again.");
+      setErrorMessage("Incorrect email or password. Please try again.");
     }
   };
 
