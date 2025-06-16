@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; // ✅ Gunakan instance `auth` langsung
+import { auth } from "../firebase"; // Gunakan instance `auth` langsung
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -24,7 +24,7 @@ const SignUp = () => {
       navigate("/login");
     } catch (error) {
       setErrorMessage(error.message);
-      console.error("Signup error:", error); // ✅ Tambahkan log untuk debugging
+      console.error("Signup error:", error); // Tambahkan log untuk debugging
     }
   };
 

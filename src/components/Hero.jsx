@@ -18,10 +18,10 @@ const Hero = () => {
             </p>
             <div className="flex justify-center">
               <button className="inline-flex text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded text-lg">
-                Button
+                Shop now
               </button>
               <button className="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">
-                Button
+                View
               </button>
             </div>
           </div>
@@ -29,7 +29,7 @@ const Hero = () => {
             <img
               className="object-cover object-center rounded"
               alt="hero"
-              src="https://dummyimage.com/720x600"
+              src="https://stock.adobe.com/id/search?k=shopping&asset_id=241431868"
             />
           </div>
         </div>

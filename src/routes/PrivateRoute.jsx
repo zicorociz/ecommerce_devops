@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase"; // ✅ Gunakan instance `auth` dari firebase.js
+import { auth } from "../firebase"; // Gunakan instance `auth` dari firebase.js
 
 const PrivateRoute = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -16,7 +16,7 @@ const PrivateRoute = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) return <div>Loading...</div>; // ✅ Bisa pakai spinner atau indikator loading
+  if (loading) return <div>Loading...</div>; // Bisa pakai spinner atau indikator loading
 
   return user ? children : <Navigate to="/login" />;
 };
