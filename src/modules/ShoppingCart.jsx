@@ -57,7 +57,7 @@ const ShoppingCart = () => {
     <div>
       <div className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          Shopping Cart
+          Shopping Card
         </h1>
         <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
           <section
@@ -65,7 +65,7 @@ const ShoppingCart = () => {
             className="lg:col-span-8 bg-white dark:bg-slate-600"
           >
             <h2 id="cart-heading" className="sr-only text-black">
-              Items in your shopping cart
+              Items in your shopping card
             </h2>
 
             <ul
@@ -205,6 +205,14 @@ const ShoppingCart = () => {
               </dl>
               <div className="px-6 pb-4 font-medium text-green-700 dark:text-green-400">
                 You will save ₹ 3,431 on this order
+              </div>
+              <div className="px-6 pb-6">
+                <button
+                  onClick={() => navigate("/checkout")}
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-3 px-4 rounded-md transition duration-300"
+                >
+                  Proceed to Checkout
+                </button>
               </div>
             </div>
           </section>
