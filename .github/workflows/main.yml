@@ -14,37 +14,45 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          # fetch-depth: 0 diperlukan oleh SonarCloud
+          fetch-depth: 0 
       
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x' # Ganti dengan versi Node.js yang Anda gunakan
-          cache: 'npm' # Mengaktifkan caching untuk instalasi dependensi yang lebih cepat
+          node-version: '20.x'
+          cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci # 'npm ci' lebih cepat dan lebih andal untuk CI daripada 'npm install'
+        run: npm ci
 
       - name: Run Linter
         run: npm run lint
 
       - name: Run Jest Tests with Coverage
-        run: npm run test:coverage # Menjalankan tes dan menghasilkan laporan coverage
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        run: npm run test:coverage
+
+      - name: Check for coverage report (Debug Step)
+        run: ls -R
         
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v5.0.0
+        uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
+          # Argumen ini sudah dikonfigurasi untuk proyek JavaScript/TypeScript dengan Jest
           args: >
             -Dsonar.organization=zicorociz
             -Dsonar.projectKey=zicorociz_ecommerce_devops
-            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.sources=.
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.test.inclusions=**/*.test.js,**/*.test.jsx,**/*.spec.js,**/*.spec.jsx
+            -Dsonar.exclusions=node_modules/**/*,coverage/**/*
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -58,7 +66,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/ecommerce:${{ github.ref_name == 'main' && 'production' || 'staging' }}
 
-  # CD Job (Deploy to Production)
+  # Job deploy-production dan deploy-staging tidak perlu diubah
   deploy-production:
     needs: ci
     if: github.ref == 'refs/heads/main'
@@ -77,7 +85,6 @@ jobs:
             docker rm ecommerce || true
             docker run -d --name ecommerce -p 8090:8090 ${{ secrets.DOCKER_USERNAME }}/ecommerce:production
 
-  # CD Job (Deploy to Staging)
   deploy-staging:
     needs: ci
     if: github.ref == 'refs/heads/staging'
