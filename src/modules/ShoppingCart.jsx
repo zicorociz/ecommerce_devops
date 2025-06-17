@@ -1,56 +1,93 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ErrorPage from './ErrorPage';
+// 1. Impor Firebase ditambahkan
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
-  const [total, setTotal] = useState(0)
-  const cart = JSON.parse(localStorage.getItem("cart")) || []
   
-  
-  useEffect(()=>{
-    const total = cart.reduce((acc, item)=>{
-      return acc + (item.price * item.quantity)
-    }, 0)
-    setTotal(total)
-  }, [cart])
+  // 2. State dan useEffect diubah untuk mengambil data dari Firestore
+  const [cart, setCart] = useState([]);
+  const [total, setTotal] = useState(0);
 
+  useEffect(() => {
+    const fetchCart = async () => {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        // Jika tidak ada user, bisa diarahkan ke halaman login atau menampilkan pesan
+        console.log("No user logged in, using local cart or showing empty.");
+        // Untuk sementara, bisa biarkan cart kosong atau coba ambil dari localStorage
+        // const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+        // setCart(localCart);
+        return;
+      };
 
+      const db = getFirestore();
+      const cartRef = doc(db, 'shoppingCarts', user.uid);
+      const cartSnap = await getDoc(cartRef);
+
+      if (cartSnap.exists()) {
+        setCart(cartSnap.data().items || []);
+      } else {
+        // Jika dokumen cart di Firestore belum ada
+        setCart([]);
+      }
+    };
+
+    fetchCart();
+  }, []); // Bergantung pada user, tapi untuk simpelnya kita panggil sekali saat mount
+
+  // 5. useEffect terpisah untuk menghitung total secara dinamis
+  useEffect(() => {
+    const newTotal = cart.reduce((acc, item) => {
+        // Pastikan price adalah angka
+        const price = parseFloat(String(item.price).replace(/[^0-9.-]+/g, ""));
+        return acc + (price * item.quantity);
+    }, 0);
+    setTotal(newTotal);
+  }, [cart]);
+
+  // 3. Fungsi untuk menyimpan cart ke Firestore
+  const saveCart = async (updatedCart) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const db = getFirestore();
+    const cartRef = doc(db, 'shoppingCarts', user.uid);
+    await setDoc(cartRef, { items: updatedCart });
+    setCart(updatedCart); // Update state untuk re-render
+  };
+
+  // 4. handleInc, handleDec, dan removerProduct diubah
   const handleInc = (id) => {
-     const updatedCart = cart.map(item => {
-      if(item.id === id) {
-        return {
-          ...item,
-          quantity: item.quantity + 1
-        }
-      }
-      return item
-     })
-     localStorage.setItem('cart',JSON.stringify(updatedCart))
-     navigate('/ShoppingCard')
-  }
+    const updatedCart = cart.map(item =>
+      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+    );
+    saveCart(updatedCart);
+  };
+
   const handleDec = (id) => {
-     const updatedCart = cart.map(item => {
-      if(item.id === id){
-        return{
-          ...item,
-          quantity: item.quantity - 1
-        }
-      }
-      return item
-     })
-     localStorage.setItem('cart', JSON.stringify(updatedCart))
-     navigate('/ShoppingCard')
-  }
+    const updatedCart = cart
+      .map(item =>
+        item.id === id ? { ...item, quantity: Math.max(item.quantity - 1, 1) } : item // Mencegah kuantitas < 1
+      )
+      // Jika ingin menghapus item saat kuantitas jadi 0, gunakan filter
+      .filter(item => item.quantity > 0);
+    saveCart(updatedCart);
+  };
 
   const removerProduct = (id) => {
-    const updatedCart = cart.filter(item => item.id !== id)
-     localStorage.setItem('cart', JSON.stringify(updatedCart))
-     navigate('/ShoppingCard')
-  }
+    const updatedCart = cart.filter(item => item.id !== id);
+    saveCart(updatedCart);
+  };
 
-  if(cart.length === 0){
-    return (<ErrorPage title='Cart is Empty' des='Your Shopping Cart is Empty' buttonOne='Continue Shopping' buttonTwo='Go Home'/>)
+
+  if (cart.length === 0) {
+    return (<ErrorPage title='Cart is Empty' des='Your Shopping Cart is Empty' buttonOne='Continue Shopping' buttonTwo='Go Home' />);
   }
 
   return (
@@ -76,13 +113,13 @@ const ShoppingCart = () => {
                 <div key={product.id} className="px-4">
                   <li className="flex py-6 sm:py-6 ">
                     <div className="flex-shrink-0">
-                    <Link to={`/ProductPage/${product.id}`}>
-                      <img
-                        src={product?.image}
-                        alt={product?.title}
-                        className="h-24 w-24 rounded-md object-contain object-center sm:h-38 sm:w-38"
-                      />
-                     </Link>
+                      <Link to={`/ProductPage/${product.id}`}>
+                        <img
+                          src={product?.image || product?.imageSrc} // Menyesuaikan dengan berbagai key
+                          alt={product?.title || product?.name}
+                          className="h-24 w-24 rounded-md object-contain object-center sm:h-38 sm:w-38"
+                        />
+                      </Link>
                     </div>
 
                     <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
@@ -93,7 +130,7 @@ const ShoppingCart = () => {
                               <Link to={`/ProductPage/${product.id}`}
                                 className="font-medium text-lg text-gray-700 dark:text-white"
                               >
-                                {product?.title}
+                                {product?.title || product?.name}
                               </Link>
                             </h3>
                           </div>
@@ -108,16 +145,15 @@ const ShoppingCart = () => {
                             ) : null}
                           </div>
                           <div className="mt-1 flex items-end">
-                            <p className="text-xs line-through font-medium text-gray-500 dark:text-gray-100">
-                              ${product.price}
-                            </p>
+                            {/* Menampilkan harga dengan format yang benar */}
                             <p className="text-sm font-medium text-gray-900 dark:text-white">
-                              &nbsp;&nbsp;${product.price}
+                              ${parseFloat(String(product.price).replace(/[^0-9.-]+/g, "")).toFixed(2)}
                             </p>
-                            &nbsp;&nbsp;
-                            <p className="text-sm font-medium text-green-500">
-                              {product.discount}
-                            </p>
+                            {product.discount && (
+                                <p className="ml-2 text-sm font-medium text-green-500">
+                                {product.discount}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -128,27 +164,27 @@ const ShoppingCart = () => {
                       <button
                         type="button"
                         className="h-7 w-7 rounded-full border border-[#e0e0e0]"
-                        onClick={()=> handleDec(product?.id)}
-                        >
+                        onClick={() => handleDec(product?.id)}
+                      >
                         -
                       </button>
                       <input
                         type="text"
                         className="h-7 w-9 text-center mx-1 border dark:bg-white dark:text-black"
                         value={product?.quantity}
-                        onChange={() => {}}
-                        />
+                        readOnly // Sebaiknya readOnly agar tidak bisa diubah manual
+                      />
                       <button
                         type="button"
                         className="h-7 w-7 rounded-full border border-[#e0e0e0] flex justify-center items-center"
-                        onClick={()=> handleInc(product?.id)}
+                        onClick={() => handleInc(product?.id)}
                       >
                         +
                       </button>
                     </div>
                     <div className="ml-4 flex flex-1 sm:ml-6 dark:text-white">
-                      <button className="font-medium mr-4 ">SAVE FOR LATTER</button>
-                      <button className="font-medium text-yellow-400 hover:text-yellow-200" onClick={()=> removerProduct(product?.id)}>REMOVE</button>
+                      <button type="button" className="font-medium mr-4 ">SAVE FOR LATER</button>
+                      <button type="button" className="font-medium text-yellow-400 hover:text-yellow-200" onClick={() => removerProduct(product?.id)}>REMOVE</button>
                     </div>
                   </div>
                 </div>
@@ -175,7 +211,7 @@ const ShoppingCart = () => {
                     Price ({cart.length} item)
                   </dt>
                   <dd className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    ₹ {total}
+                    ₹ {total.toFixed(2)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between pt-4">
@@ -183,7 +219,8 @@ const ShoppingCart = () => {
                     <span>Discount</span>
                   </dt>
                   <dd className="text-sm font-medium text-green-700 dark:text-green-400">
-                    - ₹ 3,431
+                    {/* Diskon bisa dibuat dinamis nanti */}
+                    - ₹ 3,431 
                   </dd>
                 </div>
                 <div className="flex items-center justify-between py-4">
@@ -199,7 +236,8 @@ const ShoppingCart = () => {
                     Total Amount
                   </dt>
                   <dd className="text-base font-medium text-gray-900 dark:text-white">
-                    ₹ {total}
+                  {/* Total amount bisa dikurangi diskon jika diperlukan */}
+                    ₹ {total.toFixed(2)}
                   </dd>
                 </div>
               </dl>
@@ -222,7 +260,7 @@ const ShoppingCart = () => {
   )
 }
 
-export default ShoppingCart
+export default ShoppingCart;
 
 const products = [
   {
