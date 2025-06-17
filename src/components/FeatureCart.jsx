@@ -38,7 +38,11 @@ const FeatureCart = () => {
                   Blue bottle crucifix vinyl post-ironic four dollar toast vegan
                   taxidermy. Gastropub indxgo juice poutine.
                 </p>
-                <a className="mt-3 text-yellow-500 inline-flex items-center">
+                <button
+                  type="button"
+                  className="mt-3 text-yellow-500 inline-flex items-center bg-transparent border-none p-0 cursor-pointer"
+                  aria-label="Learn More"
+                >
                   Learn More
                   <svg
                     fill="none"
@@ -51,7 +55,7 @@ const FeatureCart = () => {
                   >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -81,7 +85,11 @@ const FeatureCart = () => {
                   Blue bottle crucifix vinyl post-ironic four dollar toast vegan
                   taxidermy. Gastropub indxgo juice poutine.
                 </p>
-                <a className="mt-3 text-yellow-500 inline-flex items-center">
+                <button
+                  type="button"
+                  className="mt-3 text-yellow-500 inline-flex items-center bg-transparent border-none p-0 cursor-pointer"
+                  aria-label="Learn More"
+                >
                   Learn More
                   <svg
                     fill="none"
@@ -94,7 +102,7 @@ const FeatureCart = () => {
                   >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -125,7 +133,11 @@ const FeatureCart = () => {
                   Blue bottle crucifix vinyl post-ironic four dollar toast vegan
                   taxidermy. Gastropub indxgo juice poutine.
                 </p>
-                <a className="mt-3 text-yellow-500 inline-flex items-center">
+                <button
+                  type="button"
+                  className="mt-3 text-yellow-500 inline-flex items-center bg-transparent border-none p-0 cursor-pointer"
+                  aria-label="Learn More"
+                >
                   Learn More
                   <svg
                     fill="none"
@@ -138,7 +150,7 @@ const FeatureCart = () => {
                   >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
-                </a>
+                </button>
               </div>
             </div>
           </div>
