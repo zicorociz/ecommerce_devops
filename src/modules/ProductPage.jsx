@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loadrer from "../utiliy/Loadrer";
+// ✅ 1. IMPORT FUNGSI FIREBASE DAN AUTH
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -17,20 +20,48 @@ const ProductPage = () => {
     fetchProduct();
   }, [id]);
 
-  const handleCart = (product) => {
-    toast.success("Item added!", { position: "top-right" }); // ✅ Hanya muncul di kanan atas
-    console.log(product);
+  // ✅ 2. UBAH TOTAL FUNGSI handleCart UNTUK MENGGUNAKAN FIRESTORE
+  const handleCart = async (productToAdd) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const isProductExist = cart.find((item) => item.id === product.id);
+    // Jika user tidak login, jangan lakukan apa-apa (atau beri peringatan)
+    if (!user) {
+      toast.error("You must be logged in to add items to the cart!", { position: "top-right" });
+      return;
+    }
 
-    if (isProductExist) {
-      const updatedCart = cart.map((item) =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-    } else {
-      localStorage.setItem("cart", JSON.stringify([...cart, { ...product, quantity: 1 }]));
+    const db = getFirestore();
+    const cartRef = doc(db, 'shoppingCarts', user.uid);
+
+    toast.info("Adding to cart...", { position: "top-right", autoClose: 1000 });
+
+    try {
+      // Ambil data keranjang yang sudah ada dari Firestore
+      const cartSnap = await getDoc(cartRef);
+      const existingCart = cartSnap.exists() ? cartSnap.data().items : [];
+
+      // Cek apakah produk sudah ada di keranjang
+      const isProductExist = existingCart.find((item) => item.id === productToAdd.id);
+
+      let updatedCart;
+      if (isProductExist) {
+        // Jika sudah ada, tambah kuantitasnya
+        updatedCart = existingCart.map((item) =>
+          item.id === productToAdd.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      } else {
+        // Jika belum ada, tambahkan produk baru dengan kuantitas 1
+        updatedCart = [...existingCart, { ...productToAdd, quantity: 1 }];
+      }
+
+      // Simpan kembali seluruh keranjang yang sudah diperbarui ke Firestore
+      await setDoc(cartRef, { items: updatedCart });
+      toast.success("Item added successfully!", { position: "top-right" });
+
+    } catch (error) {
+      console.error("Error updating cart: ", error);
+      toast.error("Failed to add item to cart.", { position: "top-right" });
     }
   };
 
@@ -50,7 +81,7 @@ const ProductPage = () => {
             <h1 className="text-gray-500 text-3xl title-font font-medium mb-1">{product?.title}</h1>
             <p className="leading-relaxed">{product?.description}</p>
 
-            <div className="flex">
+            <div className="flex mt-6 items-center">
               <span className="title-font font-medium text-2xl">${product?.price}</span>
               <button
                 onClick={() => handleCart(product)}
@@ -63,8 +94,7 @@ const ProductPage = () => {
         </div>
       </div>
 
-      {/* ✅ Tambahkan posisi agar Toast hanya muncul di satu tempat */}
-      <ToastContainer position="top-right" />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
     </section>
   );
 };
