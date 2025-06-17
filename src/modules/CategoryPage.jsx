@@ -14,7 +14,7 @@ const CategoryPage = () => {
             setCateGory(date)
         } 
         fetchCategories()
-     }, [])
+     }, [category])
 
 
   return (

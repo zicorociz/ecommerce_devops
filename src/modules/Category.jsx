@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Loadrer from "../utiliy/Loadrer";
 
 
@@ -30,7 +29,7 @@ export const Category = () => {
         setCategory(categoryDate)
        } 
        fetchCategorie();
-     },[])
+     },[category])
 
 
  if (categories.length === 0) return <Loadrer />

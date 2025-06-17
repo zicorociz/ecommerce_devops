@@ -3,7 +3,6 @@ import Product from "../components/Product";
 import Hero from "../components/Hero";
 import FeatureCart from "../components/FeatureCart";
 import StateCart from "../components/StateCart";
-import Footer from "../components/Footer";
 import { Cart } from "../components/Card";
 import Loader from "../utiliy/Loadrer";
 

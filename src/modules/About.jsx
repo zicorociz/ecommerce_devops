@@ -27,7 +27,7 @@ const About = () => {
         </div>
         <p className="mt-10 text-center text-gray-600">
           Can&apos;t find what you&apos;re looking for?{' '}
-          <a href="#" title="" className="black font-semibold hover:underline">
+          <a href="/contact" title="Contact us" className="black font-semibold hover:underline">
             Contact us
           </a>
         </p>
