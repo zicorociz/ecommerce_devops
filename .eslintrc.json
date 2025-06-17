@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "react-app",
+    "react-app/jest"
+  ],
+  "rules": {
+    // Di sini Anda bisa menimpa atau menambahkan aturan khusus.
+    // Contoh aturan yang berguna:
+    
+    // Menonaktifkan aturan yang mengharuskan "import React from 'react';" di setiap file JSX
+    "react/react-in-jsx-scope": "off",
+    
+    // Menonaktifkan pemeriksaan prop-types jika Anda tidak menggunakannya (misalnya, jika Anda menggunakan TypeScript)
+    "react/prop-types": "off",
+
+    // Memberi peringatan (bukan error) untuk variabel yang tidak digunakan
+    "no-unused-vars": [
+      "warn",
+      {
+        "args": "none",
+        "ignoreRestSiblings": true
+      }
+    ]
+  }
+}

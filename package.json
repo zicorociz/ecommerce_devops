@@ -20,6 +20,8 @@
     "start:prod": "serve -s build",
     "build": "react-scripts build",
     "test": "jest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

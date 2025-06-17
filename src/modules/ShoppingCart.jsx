@@ -106,7 +106,6 @@ const ShoppingCart = () => {
             </h2>
 
             <ul
-              role="list"
               className="divide-y divide-gray-200 border-t border-b border-gray-200"
             >
               {cart.map((product) => (
@@ -262,41 +261,3 @@ const ShoppingCart = () => {
 
 export default ShoppingCart;
 
-const products = [
-  {
-    id: 1,
-    name: "APPLE iPhone 11 (White, 128 GB)",
-    href: "#",
-    price: "₹47,199",
-    originalPrice: "₹48,900",
-    discount: "5% Off",
-    color: "White",
-    size: "6.1 inch",
-    imageSrc:
-      "https://dev-ui-image-assets.s3.ap-south-1.amazonaws.com/shopping-cart/iphone-11-256-u-mwm82hn-a-apple-0-original-imafkg25mhaztxns.jpeg?q=90",
-  },
-  {
-    id: 2,
-    name: "Syska 20000 mAh Power Bank",
-    href: "#",
-    price: "₹1,549",
-    originalPrice: "₹2,499",
-    discount: "38% off",
-    color: "Black",
-    leadTime: "3-4 weeks",
-    size: "20000 mAh",
-    imageSrc:
-      "https://dev-ui-image-assets.s3.ap-south-1.amazonaws.com/shopping-cart/p2024j-bk-p2024j-20000-syska-original-imafz4zuunbw3mfu.jpeg?q=70",
-  },
-  {
-    id: 3,
-    name: "Back Cover for Apple Iphone 11",
-    href: "#",
-    price: "₹219 ",
-    originalPrice: "₹999",
-    discount: "78% off",
-    color: "Black",
-    imageSrc:
-      "https://dev-ui-image-assets.s3.ap-south-1.amazonaws.com/shopping-cart/linetpu-029-012-101-gadgetm-original-imag7ayekbkvfu4f.jpeg?q=70",
-  },
-];

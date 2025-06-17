@@ -1,0 +1,12 @@
+{
+  // Mengaktifkan ESLint untuk memperbaiki masalah saat file disimpan
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Memastikan ESLint diaktifkan untuk tipe file JavaScript dan React
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact"
+  ]
+}
