@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header';
 
-// ... (semua mock tetap sama seperti sebelumnya) ...
 let authStateCallback = null;
 const mockNavigate = jest.fn();
 const mockSignOut = jest.fn();
@@ -24,7 +23,6 @@ jest.mock('firebase/auth', () => ({
 
 jest.mock('../firebase', () => ({ auth: {} }));
 
-
 describe('Header Component', () => {
 
   beforeEach(() => {
@@ -37,27 +35,62 @@ describe('Header Component', () => {
     render(<MemoryRouter><Header /></MemoryRouter>);
   };
 
-  // ... (tes-tes lain yang sudah benar) ...
-  test('merender link navigasi utama dengan benar', () => { /* ... */ });
-  test('menampilkan tombol Login dan Sign Up saat pengguna tidak login', () => { /* ... */ });
-  test('menampilkan tombol Logout saat pengguna login', async () => { /* ... */ });
-  test('memanggil signOut dan navigasi saat tombol Logout diklik', async () => { /* ... */ });
+  test('merender link navigasi utama dengan benar', () => {
+    renderHeader();
+    expect(screen.getByRole('link', { name: /ecommerce/i })).toBeInTheDocument();
+  });
 
+  test('menampilkan tombol Login dan Sign Up saat pengguna tidak login', () => {
+    renderHeader();
+    act(() => {
+      if (authStateCallback) authStateCallback(null);
+    });
+    expect(screen.getByRole('link', { name: /login/i })).toBeInTheDocument();
+  });
 
-  // TES YANG DIPERBARUI
+  test('menampilkan tombol Logout saat pengguna login', () => {
+    renderHeader();
+    act(() => {
+      if (authStateCallback) authStateCallback({ uid: 'user123' });
+    });
+    expect(screen.getByRole('button', { name: /logout/i })).toBeInTheDocument();
+  });
+
+  // Tes yang sudah diperbaiki
+  test('memanggil signOut dan navigasi saat tombol Logout diklik', async () => {
+    mockSignOut.mockResolvedValue(undefined);
+    renderHeader();
+    
+    act(() => {
+      if (authStateCallback) authStateCallback({ uid: 'user123' });
+    });
+    
+    const logoutButton = await screen.findByRole('button', { name: /logout/i });
+    fireEvent.click(logoutButton);
+
+    await waitFor(() => {
+      expect(mockSignOut).toHaveBeenCalledTimes(1);
+    });
+
+    // Simulasikan perubahan state auth setelah logout
+    act(() => {
+      if (authStateCallback) authStateCallback(null);
+    });
+
+    // Tunggu UI diperbarui untuk menampilkan tombol Login
+    expect(await screen.findByRole('link', { name: /login/i })).toBeInTheDocument();
+    
+    // Verifikasi navigasi
+    expect(mockNavigate).toHaveBeenCalledWith('/login');
+  });
+
   test('mengganti tema saat tombol tema diklik', () => {
     renderHeader();
-
     expect(document.body.className).not.toContain('dark');
-
-    // Cari elemen menggunakan data-testid
     const themeToggleButton = screen.getByTestId('theme-toggle-button');
     fireEvent.click(themeToggleButton);
-    
     expect(document.body.className).toContain('dark');
-
     fireEvent.click(themeToggleButton);
-
     expect(document.body.className).not.toContain('dark');
   });
 });
