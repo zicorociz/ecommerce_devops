@@ -72,7 +72,7 @@ describe('Header Component', () => {
       expect(mockSignOut).toHaveBeenCalledTimes(1);
     });
 
-    // Simulasikan perubahan state auth setelah logout
+    // Simulasikan peraubahan state auth setelah logout
     act(() => {
       if (authStateCallback) authStateCallback(null);
     });
