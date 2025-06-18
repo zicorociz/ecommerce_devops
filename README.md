@@ -1,6 +1,6 @@
 # Proyek CI/CD DevOps – E-commerce
 
-Repositori ini dibuat untuk mengimplementasikan praktik **Continuous Integration (CI)** dan **Continuous Deployment (CD)** menggunakan GitHub Actions, Docker, SonarQube, dan deployment ke server VPS (Niagahoster). Proyek ini dilengkapi dengan monitoring uptime menggunakan Uptime Kuma.
+Repositori ini dibuat untuk mengimplementasikan praktik Continuous Integration (CI) dan Continuous Deployment (CD) menggunakan GitHub Actions, Docker, SonarCloud, dan deployment ke server VPS (Niagahoster). Proyek ini juga menggunakan Firebase untuk mengelola autentikasi pengguna dan database real-time melalui Cloud Firestore, serta dilengkapi dengan monitoring uptime menggunakan Uptime Kuma.
 
 Website: http://45.13.132.219:8090/
 ![image_alt](https://github.com/zicorociz/cobadevops3/blob/b0dfc7a6d8dace330440f8e79e5b77ea70ceda42/website%20page.png)
