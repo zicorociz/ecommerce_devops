@@ -1,12 +1,9 @@
-// src/__tests__/Header.test.jsx
-
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../components/Header';
 
-// --- MOCKING ---
 let authStateCallback = null;
 const mockNavigate = jest.fn();
 const mockSignOut = jest.fn();
@@ -68,21 +65,22 @@ describe('Header Component', () => {
     const logoutButton = await screen.findByRole('button', { name: /logout/i });
     fireEvent.click(logoutButton);
 
+    // Menunggu mock dipanggil dan mensimulasikan perubahan auth
     await act(async () => {
       await expect(mockSignOut).toHaveBeenCalledTimes(1);
+      // Simulasikan listener auth mendeteksi pengguna sudah null
       if (authStateCallback) authStateCallback(null);
     });
 
+    // Verifikasi UI diperbarui setelah state berubah
     expect(await screen.findByRole('link', { name: /login/i })).toBeInTheDocument();
     expect(mockNavigate).toHaveBeenCalledWith('/login');
   });
 
-  // Tes tema yang sudah disesuaikan dengan HTML baru
   test('mengganti tema saat tombol tema diklik', () => {
     renderHeader();
     expect(document.body.className).not.toContain('dark');
 
-    // Cari berdasarkan role checkbox dan nama aksesibelnya
     const themeToggleButton = screen.getByRole('checkbox', { name: /toggle theme/i });
     
     fireEvent.click(themeToggleButton);
