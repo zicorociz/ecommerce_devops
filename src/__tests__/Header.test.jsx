@@ -78,15 +78,19 @@ describe('Header Component', () => {
   });
 
   test('mengganti tema saat tombol tema diklik', () => {
-    renderHeader();
-    expect(document.body.className).not.toContain('dark');
+  renderHeader();
+  
+  // Awalnya, tema adalah 'light'
+  expect(document.documentElement.getAttribute('data-theme')).toBe('light');
 
-    const themeToggleButton = screen.getByRole('checkbox', { name: /toggle theme/i });
-    
-    fireEvent.click(themeToggleButton);
-    expect(document.body.className).toContain('dark');
+  const themeToggleButton = screen.getByRole('checkbox', { name: /toggle theme/i });
+  
+  // Klik pertama untuk beralih ke 'dark'
+  fireEvent.click(themeToggleButton);
+  expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
 
-    fireEvent.click(themeToggleButton);
-    expect(document.body.className).not.toContain('dark');
-  });
+  // Klik kedua untuk kembali ke 'light'
+  fireEvent.click(themeToggleButton);
+  expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+});
 });

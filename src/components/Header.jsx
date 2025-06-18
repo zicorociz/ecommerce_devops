@@ -5,8 +5,13 @@ import { auth } from '../firebase';
 
 const Header = () => {
   const [user, setUser] = useState(null);
-  const [theme, setTheme] = useState('light');
-  const [isChecked, setIsChecked] = useState(false);
+  
+  // 1. Inisialisasi tema dari localStorage, atau default ke 'light'
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  
+  // State isChecked sekarang hanya cerminan dari state theme
+  const isChecked = theme === 'dark';
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,13 +30,17 @@ const Header = () => {
     }
   };
 
-  const toggleCheckbox = () => {
-    setIsChecked(!isChecked);
-    setTheme(theme === "dark" ? "light" : "dark");
+  // 2. Sederhanakan fungsi ganti tema
+  const handleThemeChange = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
   };
 
+  // 3. Terapkan tema ke seluruh dokumen
   useEffect(() => {
-    document.body.className = theme;
+    // Mengubah atribut data-theme di elemen <html> adalah cara standar DaisyUI
+    document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
   return (
@@ -73,13 +82,14 @@ const Header = () => {
           </svg>
         </Link>
 
+        {/* --- BAGIAN SWAP YANG DIPERBAIKI TOTAL --- */}
         <label className="swap swap-rotate mx-3">
           <input 
             type="checkbox" 
-            onChange={toggleCheckbox}
-            checked={isChecked} 
-            className="hidden"
+            onChange={handleThemeChange}
+            checked={isChecked}
             aria-label="Toggle theme"
+            // Checkbox asli disembunyikan oleh CSS DaisyUI untuk .swap input
           />
           
           {/* Ikon MATAHARI (swap-on) - Muncul saat tema GELAP (isChecked=true) */}
