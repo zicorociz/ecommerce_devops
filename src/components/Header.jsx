@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; // <--- VERSI YANG LEBIH BAIK
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebase'; // sesuaikan path jika perlu
@@ -109,6 +109,7 @@ const Header = () => {
           type="checkbox"
           checked={isChecked}
           onClick={() => toggleCheckbox()}
+          data-testid="theme-toggle-button"
         >
           {isChecked ? (
             <svg
