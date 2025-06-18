@@ -1,4 +1,6 @@
-import { useState } from "react";
+// src/modules/Context.jsx
+
+import React, { useState, useEffect } from "react"; // <--- Impor digabungkan
 import { db, auth } from "../firebase";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -14,7 +16,7 @@ const Context = () => {
   const [userUid, setUserUid] = useState(null);
 
   // Deteksi login user
-  useState(() => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserUid(user.uid);
