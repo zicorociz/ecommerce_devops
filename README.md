@@ -7,7 +7,7 @@ Website: http://45.13.132.219:8090/
 
 ## 📄 Dokumentasi Proyek
 👉 Dokumentasi lengkap proyek PSO dapat diakses [di sini](https://docs.google.com/document/d/1a2DzO4n6TFwfom2k698a_BO9H8oXvmMIc7KmMnWqqIs/edit?tab=t.0).
-GitHub sebelumnya: https://github.com/zicorociz/cobadevops3
+👉 GitHub sebelumnya: https://github.com/zicorociz/cobadevops3
 
 
 ## 📌 Tujuan
