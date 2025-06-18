@@ -72,7 +72,7 @@ describe('Header Component', () => {
       expect(mockSignOut).toHaveBeenCalledTimes(1);
     });
 
-    // Simulasikan peraubahan state auth setelah logout
+    // Simulasikan perubahan state auth setelah logout
     act(() => {
       if (authStateCallback) authStateCallback(null);
     });
@@ -87,7 +87,7 @@ describe('Header Component', () => {
   test('mengganti tema saat tombol tema diklik', () => {
     renderHeader();
     expect(document.body.className).not.toContain('dark');
-    const themeToggleButton = screen.getByRole('checkbox', { name: /toggle theme/i });
+    const themeToggleButton = screen.getByTestId('theme-toggle-button');
     fireEvent.click(themeToggleButton);
     expect(document.body.className).toContain('dark');
     fireEvent.click(themeToggleButton);
